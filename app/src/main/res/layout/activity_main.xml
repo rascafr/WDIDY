@@ -68,7 +68,7 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:paddingLeft="8dp"
-            android:text="Profil"/>
+            android:text="Profil utilisateur"/>
 
     </RelativeLayout>
 
