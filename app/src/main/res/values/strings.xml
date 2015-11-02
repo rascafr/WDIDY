@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WDIDY?</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="loading">Chargement ...</string>
+    <string name="welcome">Join the party society right now</string>
+
+    <string name="salt_pass">You forgot something !</string>
+    <string name="salt_login">Erreur réseau</string>
+</resources>
