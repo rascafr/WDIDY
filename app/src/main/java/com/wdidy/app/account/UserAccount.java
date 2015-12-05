@@ -13,24 +13,20 @@ import org.json.JSONObject;
  */
 public class UserAccount {
 
-    public String name, email, city, country, password;
-    public int age;
+    private String name, email, city, country, password, IDuser;
+    private boolean isCreated;
+    private int age;
 
-    public UserAccount () {}
-
-    public UserAccount(String name, String email, String password, String city, String country, int age) {
-        this.name = name;
-        this.email = email;
-        this.city = city;
-        this.country = country;
-        this.age = age;
-        this.password = password;
+    public UserAccount () {
+        this.isCreated = false;
     }
 
     public UserAccount(JSONObject data) throws JSONException {
-        this.name = data.getString("name") + " " + data.getString("lastname");
+        this.IDuser = data.getString("IDuser");
+        this.name = data.getString("firstname") + " " + data.getString("lastname");
         this.country = data.getString("country");
         this.city = data.getString("city");
+        this.isCreated = true;
     }
 
     public void readAccountPromPrefs (Context context) {
@@ -39,12 +35,14 @@ public class UserAccount {
 
         prefs_Read = context.getSharedPreferences(Constants.PREFS_ACCOUNT_KEY, 0);
 
+        this.IDuser = prefs_Read.getString(Constants.PREFS_ACCOUNT_IDUSER, "");
         this.name = prefs_Read.getString(Constants.PREFS_ACCOUNT_NAME, "");
         this.email = prefs_Read.getString(Constants.PREFS_ACCOUNT_EMAIL, "");
         this.password = prefs_Read.getString(Constants.PREFS_ACCOUNT_PASSWORD, "");
         this.age = prefs_Read.getInt(Constants.PREFS_ACCOUNT_AGE, 0);
         this.city = prefs_Read.getString(Constants.PREFS_ACCOUNT_CITY, "");
         this.country = prefs_Read.getString(Constants.PREFS_ACCOUNT_COUNTRY, "");
+        this.isCreated = prefs_Read.getBoolean(Constants.PREFS_ACCOUNT_CREATED, false);
     }
 
     public void registerAccountInPrefs (Context context) {
@@ -55,17 +53,34 @@ public class UserAccount {
         prefs_Read = context.getSharedPreferences(Constants.PREFS_ACCOUNT_KEY, 0);
         prefs_Write = prefs_Read.edit();
 
+        prefs_Write.putString(Constants.PREFS_ACCOUNT_IDUSER, this.IDuser);
         prefs_Write.putString(Constants.PREFS_ACCOUNT_NAME, this.name);
         prefs_Write.putString(Constants.PREFS_ACCOUNT_EMAIL, this.email);
         prefs_Write.putString(Constants.PREFS_ACCOUNT_PASSWORD, this.password);
         prefs_Write.putString(Constants.PREFS_ACCOUNT_CITY, this.city);
         prefs_Write.putString(Constants.PREFS_ACCOUNT_COUNTRY, this.country);
         prefs_Write.putInt(Constants.PREFS_ACCOUNT_AGE, this.age);
+        prefs_Write.putBoolean(Constants.PREFS_ACCOUNT_CREATED, this.isCreated);
         prefs_Write.apply();
+    }
+
+    public void removeAccount (Context context) {
+        this.IDuser = "";
+        this.name = "";
+        this.email = "";
+        this.password = "";
+        this.city = "";
+        this.country = "";
+        this.isCreated = false;
+        registerAccountInPrefs(context);
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getUserID () {
+        return IDuser;
     }
 
     public String getEmail() {
@@ -86,5 +101,9 @@ public class UserAccount {
 
     public int getAge() {
         return age;
+    }
+
+    public boolean isCreated() {
+        return isCreated;
     }
 }

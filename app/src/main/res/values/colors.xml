@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#E74C3C</color>
+    <color name="colorRipple">#e66b5f</color>
     <color name="colorPrimaryDark">#ba3e32</color>
     <color name="colorAccent">#5b5b5b</color>
     <color name="white">#fff</color>
     <color name="colorNormal">#e47569</color>
     <color name="colorPressed">#974e46</color>
+
+    <color name="drawer_text">#e0e0e0</color>
+    <color name="drawer_background">#555</color>
+    <color name="drawer_pressed">#777</color>
+    <color name="drawer_divider">#777</color>
 
 </resources>

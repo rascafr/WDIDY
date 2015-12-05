@@ -5,15 +5,14 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ProgressBar;
 
-import com.wdidy.app.R;
+import com.wdidy.app.account.UserAccount;
 
 /**
  * Created by Rascafr on 23/10/2015.
  */
-public class SplashScreen extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +26,18 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void run() {
-                // This method will be executed once the timer is over
-                Intent i = new Intent(SplashScreen.this, LoginActivity.class);
+
+                // Si profil non crée -> login
+                // Sinon -> activité principale
+                UserAccount userAccount = new UserAccount();
+                userAccount.readAccountPromPrefs(SplashActivity.this);
+
+                Intent i;
+                if (userAccount.isCreated()) {
+                    i = new Intent(SplashActivity.this, TracksListActivity.class);
+                } else {
+                    i = new Intent(SplashActivity.this, LoginActivity.class);
+                }
                 startActivity(i);
                 finish();
 

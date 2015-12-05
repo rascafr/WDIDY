@@ -1,10 +1,31 @@
 <resources>
     <string name="app_name">WDIDY?</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name_tracks">Vos trajets</string>
+    <string name="app_name_track_map">Mon trajet</string>
+    <string name="action_logout">Déconnexion</string>
+    <string name="action_new_track">Créer trajet</string>
+    <string name="action_tracks_list">Mes trajets</string>
 
     <string name="loading">Chargement ...</string>
     <string name="welcome">Join the party society right now</string>
 
     <string name="salt_pass">You forgot something !</string>
     <string name="salt_login">Erreur réseau</string>
+    
+    <string-array name="nav_drawer_items">
+        <item>Mon profil</item>
+        <item>Ma timeline</item>
+        <item>Mes amis</item>
+        <item>Préférences</item>
+        <item>Aide</item>
+    </string-array>
+    
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_slide</item>
+        <item>@drawable/ic_slide</item>
+        <item>@drawable/ic_slide</item>
+        <item>@drawable/ic_slide</item>
+        <item>@drawable/ic_slide</item>
+    </array>
+
 </resources>
