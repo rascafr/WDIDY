@@ -94,6 +94,13 @@ public class TracksListActivity extends AppCompatActivity {
         progressNewTrack.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         viewNewTrack.setVisibility(View.INVISIBLE);
         profileCircleView = (CircleImageView) findViewById(R.id.profileCircleView);
+        profileCircleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(TracksListActivity.this, FriendsActivity.class);
+                TracksListActivity.this.startActivity(i);
+            }
+        });
 
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
@@ -133,6 +140,9 @@ public class TracksListActivity extends AppCompatActivity {
                 TracksListActivity.this.startActivity(i);
             }
         }));
+
+        // On long clic listener → edit map
+        //recyList.
 
         // On floating button click listener → new track
         fabNewTrack.setOnClickListener(new View.OnClickListener() {

@@ -13,4 +13,9 @@
     <color name="drawer_pressed">#777</color>
     <color name="drawer_divider">#777</color>
 
+    <color name="color_message_friend">#d7ccc8</color>
+    <color name="color_message_text_friend">#484848</color>
+    <color name="color_message_user">#ef5350</color>
+    <color name="color_message_text_user">#efefef</color>
+
 </resources>

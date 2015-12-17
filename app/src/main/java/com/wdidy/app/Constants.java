@@ -20,6 +20,8 @@ public class Constants {
     // Intents
     public final static String INTENT_TRACK_ID = "intent.com.wdidy.app.trackid";
     public final static String INTENT_TRACK_NAME = "intent.com.wdidy.app.trackname";
+    public final static String INTENT_CONV_FRIEND_ID = "intent.com.wdidy.app.conversation.friendID";
+    public final static String INTENT_CONV_FRIEND_NAME = "intent.com.wdidy.app.conversation.friendName";
 
     // URL
     private static final String URL_SERVER = "http://217.199.187.59/francoisle.fr/wdidy/";
@@ -34,5 +36,8 @@ public class Constants {
     public static final String API_LIST_POINTS = URL_API + "track/list_points";
     public static final String API_NEW_TRACK = URL_API + "track/create";
     public static final String API_ADD_POINT = URL_API + "point/add";
+    public static final String API_LIST_FRIENDS = URL_API + "friend/list";
+    public static final String API_SINGLE_CONVERSATION = URL_API + "message/single";
+    public static final String API_POST_MESSAGE = URL_API + "message/post";
 
 }

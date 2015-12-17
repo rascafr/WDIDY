@@ -2,9 +2,11 @@
     <string name="app_name">WDIDY?</string>
     <string name="app_name_tracks">Vos trajets</string>
     <string name="app_name_track_map">Mon trajet</string>
+    <string name="app_name_friend">Mes amis</string>
     <string name="action_logout">Déconnexion</string>
     <string name="action_new_track">Créer trajet</string>
     <string name="action_tracks_list">Mes trajets</string>
+    <string name="action_friends">Mes amis</string>
 
     <string name="loading">Chargement ...</string>
     <string name="welcome">Join the party society right now</string>
