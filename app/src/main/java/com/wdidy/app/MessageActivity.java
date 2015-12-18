@@ -266,8 +266,6 @@ public class MessageActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            Log.d("UPD", "Updating ...");
-
             run = false;
             if (firstDisplay) {
                 progressMessage.setVisibility(View.VISIBLE);
@@ -340,7 +338,6 @@ public class MessageActivity extends AppCompatActivity {
                 Toast.makeText(MessageActivity.this, "Erreur réseau", Toast.LENGTH_SHORT).show();
             }
 
-            Log.d("UPD", "Done");
             mHandler.postDelayed(updateTimerThread, RUN_UPDATE);
             run = true;
         }
@@ -428,6 +425,9 @@ public class MessageActivity extends AppCompatActivity {
             mHandler.removeCallbacks(updateTimerThread);
             mHandler.postDelayed(updateTimerThread, RUN_START);
         }
+
+        // Activity is visible
+        AppVisibility.activityResumed();
     }
 
     @Override
@@ -437,6 +437,9 @@ public class MessageActivity extends AppCompatActivity {
         }
         run = false;
         super.onPause();
+
+        // Activity is not visible now
+        AppVisibility.activityPaused();
     }
 
     /**

@@ -140,13 +140,13 @@ public class RegistrationIntentService extends IntentService {
 
         @Override
         protected void onPreExecute() {
-            Log.d("GcmPushToken", "[OK] Preparing to register ...");
+            //Log.d("GcmPushToken", "[OK] Preparing to register ...");
         }
 
         @Override
         protected void onPostExecute(String data) {
 
-            Log.d("NOTIF", "API returns : " + data);
+            //Log.d("NOTIF", "API returns : " + data);
 
             boolean success = false;
 
@@ -163,10 +163,10 @@ public class RegistrationIntentService extends IntentService {
 
             if (success) {
                 // Notify UI that registration has completed, so the progress indicator can be hidden.
-                Log.d("NOTIF", "Registration complete");
+                //Log.d("NOTIF", "Registration complete");
                 sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, true).apply();
             } else {
-                Log.d("NOTIF", "Registration failed");
+                //Log.d("NOTIF", "Registration failed");
                 sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false).apply();
             }
 

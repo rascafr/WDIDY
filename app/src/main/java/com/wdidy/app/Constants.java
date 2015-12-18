@@ -16,6 +16,7 @@ public class Constants {
     public final static String PREFS_ACCOUNT_PASSWORD = "com.wdidy.app.profile.password";
     public final static String PREFS_ACCOUNT_CREATED= "com.wdidy.app.profile.created";
     public final static String PREFS_GPS_PROVIDER = "com.wdidy.app.providermode";
+    public final static String PREFS_APP_VERSION = "com.wdidy.app.version";
 
     // Activity Intents
     public final static String INTENT_TRACK_ID = "intent.com.wdidy.app.trackid";

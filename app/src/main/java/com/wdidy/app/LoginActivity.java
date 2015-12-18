@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("NOTIF", "onReceive !");
+                //Log.d("NOTIF", "onReceive !");
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
 

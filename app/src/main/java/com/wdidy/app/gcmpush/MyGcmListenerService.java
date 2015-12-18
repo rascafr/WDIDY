@@ -31,7 +31,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.wdidy.app.AppVisibility;
+import com.wdidy.app.Constants;
+import com.wdidy.app.MessageActivity;
 import com.wdidy.app.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MyGcmListenerService extends GcmListenerService {
 
@@ -48,11 +54,12 @@ public class MyGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
 
-        Log.d("NOTIF", "Receive " + data + ", from " + from);
+        //Log.d("NOTIF", "Receive " + data + ", from " + from);
 
         if (data != null) {
             String title = data.getString("title");
             String message = data.getString("message");
+            String jsonStringIntent = data.getString("intent");
 
             // [START_EXCLUDE]
             /**
@@ -66,9 +73,14 @@ public class MyGcmListenerService extends GcmListenerService {
              * In some cases it may be useful to show a notification indicating to the user
              * that a message was received.
              */
-            // TODO only if app is open !
-            if (from.equals(this.getResources().getString(R.string.play_api_push))) {
-                sendNotification(title, message);
+            // Notify the user if the app is not currently showing message's activity
+            // Also, check the service sender (unuseful ... right ?)
+            if (!AppVisibility.isActivityVisible() && from.equals(this.getResources().getString(R.string.play_api_push))) {
+                try {
+                    sendNotification(title, message, jsonStringIntent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
         // [END_EXCLUDE]
@@ -77,17 +89,37 @@ public class MyGcmListenerService extends GcmListenerService {
 
     /**
      * Create and show a simple notification containing the received GCM message.
-     *
-     * @param message GCM message received.
+     * Last update : 18/12/2015 by Rascafr
+     * @param title The notification's title
+     * @param message The notification's message
+     * @param jsonStringIntent The intent object (as JSON string). See server and associated documention.
      */
-    private void sendNotification(String title, String message) {
+    private void sendNotification(String title, String message, String jsonStringIntent) throws JSONException {
+
+        // Prepare intent
+        Intent appIntent = null;
+        JSONObject jsonIntent = new JSONObject(jsonStringIntent);
+        String app_action = jsonIntent.getString("app_action");
+        JSONObject jsonExtra = jsonIntent.getJSONObject("extra");
+
+        // Decide app intent (message, new track, etc ...).
+        switch (app_action) {
+
+            // New message received
+            case Constants.INTENT_PUSH_NEW_MESSAGE:
+                appIntent = new Intent(this, MessageActivity.class);
+                appIntent.putExtra(Constants.INTENT_CONV_FRIEND_ID, jsonExtra.getString("friend_id"));
+                appIntent.putExtra(Constants.INTENT_CONV_FRIEND_NAME, jsonExtra.getString("friend_name"));
+                break;
+        }
 
         // Attach intent to notification
-        //if (intent != null) {
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            //PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_ONE_SHOT);
+        if (appIntent != null) {
+            appIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), appIntent, PendingIntent.FLAG_ONE_SHOT);
 
             long[] pattern = {0, 100, 250, 100, 250, 100};
+            int color = this.getResources().getColor(R.color.colorPrimary);
 
             Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
@@ -95,22 +127,22 @@ public class MyGcmListenerService extends GcmListenerService {
                     .setContentTitle(title)
                     .setContentText(message)
                     .setAutoCancel(true)
-                    .setLights(Color.RED, 1000, 3000)
-                    .setColor(this.getResources().getColor(R.color.colorPrimary))
+                    .setLights(color, 1000, 3000)
+                    .setColor(color)
                     .setVibrate(pattern)
-                    .setSound(defaultSoundUri);
-                    //.setContentIntent(pendingIntent);
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
 
             // Big icon for previous version (older than Lollipop)
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher));
+                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_notif));
             }
 
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             // Random notification ID
-            notificationManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
-        //}
+            notificationManager.notify(0, notificationBuilder.build()); // Only one notification item in status bar
+        }
     }
 }
