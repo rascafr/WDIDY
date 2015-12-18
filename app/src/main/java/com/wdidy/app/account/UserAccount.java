@@ -13,7 +13,7 @@ import org.json.JSONObject;
  */
 public class UserAccount {
 
-    private String name, email, city, country, password, IDuser;
+    private String name, email, city, country, password, IDuser, device_id;
     private boolean isCreated;
     private int age;
 
@@ -105,5 +105,13 @@ public class UserAccount {
 
     public boolean isCreated() {
         return isCreated;
+    }
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
     }
 }

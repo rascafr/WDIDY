@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/rlMessage"
+              android:layout_marginLeft="64dp"
+              android:layout_marginRight="16dp"
+              android:layout_marginTop="8dp"
+              android:layout_marginBottom="8dp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_message_date"
+        android:layout_marginLeft="8dp"
+        android:id="@+id/messageDate"
+        android:textSize="14sp"
+        android:text="14"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/speech_sender"
+        android:textColor="@color/color_message_text_user"
+        android:id="@+id/messageText"
+        android:textSize="16sp"
+        android:text="Hello"
+        android:layout_below="@+id/messageDate"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

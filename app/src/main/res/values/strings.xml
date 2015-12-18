@@ -30,4 +30,7 @@
         <item>@drawable/ic_slide</item>
     </array>
 
+    <!-- GCM -->
+    <string name="play_api_push">327033001800</string>
+
 </resources>

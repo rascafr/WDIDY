@@ -29,6 +29,8 @@
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="8dp"
+            android:singleLine="true"
+            android:maxLines="1"
             android:id="@+id/etMessage"
             android:layout_toStartOf="@+id/rlSendButton"/>
 

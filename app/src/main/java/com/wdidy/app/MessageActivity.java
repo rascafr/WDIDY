@@ -1,5 +1,7 @@
 package com.wdidy.app;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,13 +10,16 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,7 +29,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdidy.app.account.UserAccount;
 import com.wdidy.app.messaging.MessageItem;
 import com.wdidy.app.utils.ConnexionUtils;
-import com.wdidy.app.utils.EncryptUtils;
 import com.wdidy.app.utils.Utilities;
 
 import org.json.JSONArray;
@@ -32,7 +36,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,6 +52,7 @@ public class MessageActivity extends AppCompatActivity {
     // Model
     private ArrayList<MessageItem> messageItems;
     private int lastID = -1;
+    private String lastData = "";
 
     // User profile
     private UserAccount userAccount;
@@ -69,8 +73,9 @@ public class MessageActivity extends AppCompatActivity {
     private RelativeLayout rlSendButton;
 
     // Others
-    private Vibrator v;
+    private Vibrator vibrator;
     private long[] pattern = {0, 200, 300, 200, 300, 200};
+    private boolean sendAllowed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +88,7 @@ public class MessageActivity extends AppCompatActivity {
         progressMessage = (ProgressBar) findViewById(R.id.progressMessage);
 
         // Create vibrator object
-        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         // Init model
         messageItems = new ArrayList<>();
@@ -113,7 +118,7 @@ public class MessageActivity extends AppCompatActivity {
 
         // Init RecyclerView
         recyList = (RecyclerView) findViewById(R.id.recyList);
-        recyList.setHasFixedSize(true);
+        recyList.setHasFixedSize(false);
 
         // Create adapter and assign it to RecyclerView
         mAdapter = new MessagesAdapter();
@@ -132,23 +137,31 @@ public class MessageActivity extends AppCompatActivity {
         rlSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    // Encode text
-                    //String message_encoded = URLEncoder.encode(etMessage.getText().toString(), "UTF-8");
-                    String message_encoded = Base64.encodeToString(etMessage.getText().toString().getBytes("UTF-8"), Base64.NO_WRAP);
 
-                    // Clear EditText field
-                    etMessage.setText("");
+                // Enable send button only if text is present
+                String message = etMessage.getText().toString().trim();
+                etMessage.setText(message);
+                if (message.length() > 0) {
+                    try {
+                        // Encode text
+                        //String message_encoded = URLEncoder.encode(etMessage.getText().toString(), "UTF-8");
+                        String message_encoded = Base64.encodeToString(message.getBytes("UTF-8"), Base64.NO_WRAP);
 
-                    // Prevents the user the message is gone
-                    Toast.makeText(MessageActivity.this, "Envoi du message ...", Toast.LENGTH_SHORT).show();
+                        // Clear EditText field
+                        etMessage.setText("");
 
-                    // Post data to server
-                    AsyncListPostMessage asyncListPostMessage = new AsyncListPostMessage();
-                    asyncListPostMessage.execute(message_encoded);
+                        // Prevents the user the message is gone
+                        Toast.makeText(MessageActivity.this, "Envoi du message ...", Toast.LENGTH_SHORT).show();
 
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                        // Post data to server
+                        AsyncListPostMessage asyncListPostMessage = new AsyncListPostMessage();
+                        asyncListPostMessage.execute(message_encoded);
+
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(MessageActivity.this, "Message vide", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -169,7 +182,7 @@ public class MessageActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            MessageItem mi = messageItems.get(position);
+            final MessageItem mi = messageItems.get(position);
 
             MessagesViewHolder mvh = (MessagesViewHolder) viewHolder;
             try {
@@ -177,6 +190,40 @@ public class MessageActivity extends AppCompatActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+
+            if (mi.isShowDate()) {
+                mvh.vDate.setText("" + mi.getDate());
+                mvh.vDate.setVisibility(View.VISIBLE);
+            } else {
+                mvh.vDate.setVisibility(View.GONE);
+            }
+
+            // Clipboard management
+            mvh.rlMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    // Vibrate
+                    vibrator.vibrate(35);
+
+                    // Notify the user the text has been copied
+                    Toast.makeText(MessageActivity.this, "Message copié !", Toast.LENGTH_SHORT).show();
+
+                    // Copy text
+                    try {
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newHtmlText(
+                                "Copier",
+                                new String(Base64.decode(mi.getText().getBytes("UTF-8"), Base64.DEFAULT)),
+                                new String(Base64.decode(mi.getText().getBytes("UTF-8"), Base64.DEFAULT))
+                        );
+                        clipboard.setPrimaryClip(clip);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                }
+            });
         }
 
         @Override
@@ -188,19 +235,22 @@ public class MessageActivity extends AppCompatActivity {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
             if (viewType == TYPE_USER)
-                return new MessagesViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_conv_sender, viewGroup, false));
+                return new MessagesViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_conv_sender_rev, viewGroup, false));
             else
-                return new MessagesViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_conv_friend, viewGroup, false));
+                return new MessagesViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_conv_friend_rev, viewGroup, false));
         }
 
         // Classic View Holder for message item
         public class MessagesViewHolder extends RecyclerView.ViewHolder {
 
-            protected TextView vText;
+            protected TextView vText, vDate;
+            protected RelativeLayout rlMessage;
 
             public MessagesViewHolder(View v) {
                 super(v);
                 vText = (TextView) v.findViewById(R.id.messageText);
+                rlMessage = (RelativeLayout) v.findViewById(R.id.rlMessage);
+                vDate = (TextView) v.findViewById(R.id.messageDate);
             }
         }
     }
@@ -210,9 +260,13 @@ public class MessageActivity extends AppCompatActivity {
      */
     private class AsyncListMessages extends AsyncTask<String, String, String> {
 
+        public static final int TIMEOUT_MESSAGE_DATE = 120;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            Log.d("UPD", "Updating ...");
 
             run = false;
             if (firstDisplay) {
@@ -229,51 +283,64 @@ public class MessageActivity extends AppCompatActivity {
 
             if (Utilities.isNetworkDataValid(data)) {
 
-                try {
-                    JSONObject jsonObject = new JSONObject(data);
-                    if (jsonObject.getInt("error") == 0) {
-                        JSONArray array = jsonObject.getJSONArray("data");
-                        messageItems.clear();
-                        for (int i=0;i<array.length();i++) {
-                            messageItems.add(new MessageItem(array.getJSONObject(i)));
-                        }
-                        mAdapter.notifyDataSetChanged();
+                if (!data.equals(lastData)) {
 
-                        if (messageItems.size() > 0) {
-                            recyList.getLayoutManager().scrollToPosition(0);
+                    try {
+                        JSONObject jsonObject = new JSONObject(data);
+                        if (jsonObject.getInt("error") == 0) {
+                            JSONArray array = jsonObject.getJSONArray("data");
+                            long lastTimestamp = 0;
+                            messageItems.clear();
+                            for (int i = 0; i < array.length(); i++) {
+                                MessageItem mi = new MessageItem(array.getJSONObject(i));
 
-                            // Notification : if last message is different from last saved and from friend
-                            int lpos = 0;
-                            MessageItem msg = messageItems.get(lpos);
-                            int msgID = msg.getIDmessage();
-
-                            if (!msg.isUser(senderID) && msgID != lastID) {
-
-                                if (lastID != -1) {
-                                    // Notify the user about the incoming message
-                                    v.vibrate(pattern, -1);
-                                }
-
-                                lastID = msgID;
+                                // Delta T bewteen two message > 5 minutes ? show date
+                                /*if (mi.getTimestamp() - lastTimestamp < -TIMEOUT_MESSAGE_DATE) {
+                                    lastTimestamp = mi.getTimestamp();
+                                    mi.setShowDate(true);
+                                }*/
+                                messageItems.add(mi);
                             }
+                            mAdapter.notifyDataSetChanged();
+
+                            if (messageItems.size() > 0) {
+                                recyList.getLayoutManager().scrollToPosition(0);
+
+                                // Notification : if last message is different from last saved and from friend
+                                int lpos = 0;
+                                MessageItem msg = messageItems.get(lpos);
+                                int msgID = msg.getIDmessage();
+
+                                if (!msg.isUser(senderID) && msgID != lastID) {
+
+                                    if (lastID != -1) {
+                                        // Notify the user about the incoming message
+                                        vibrator.vibrate(pattern, -1);
+                                    }
+
+                                    lastID = msgID;
+                                }
+                            }
+
+                        } else {
+                            new MaterialDialog.Builder(MessageActivity.this)
+                                    .title("Erreur")
+                                    .content("Cause : " + jsonObject.getString("cause"))
+                                    .negativeText("Fermer")
+                                    .show();
                         }
 
-                    } else {
-                        new MaterialDialog.Builder(MessageActivity.this)
-                                .title("Erreur")
-                                .content("Cause : " + jsonObject.getString("cause"))
-                                .negativeText("Fermer")
-                                .show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MessageActivity.this, "Erreur serveur", Toast.LENGTH_SHORT).show();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(MessageActivity.this, "Erreur serveur", Toast.LENGTH_SHORT).show();
+                    lastData = data;
                 }
             } else {
                 Toast.makeText(MessageActivity.this, "Erreur réseau", Toast.LENGTH_SHORT).show();
             }
 
+            Log.d("UPD", "Done");
             mHandler.postDelayed(updateTimerThread, RUN_UPDATE);
             run = true;
         }
@@ -309,7 +376,7 @@ public class MessageActivity extends AppCompatActivity {
                     if (jsonObject.getInt("error") == 0) {
                         JSONArray array = jsonObject.getJSONArray("data");
                         messageItems.clear();
-                        for (int i=0;i<array.length();i++) {
+                        for (int i = 0; i < array.length(); i++) {
                             messageItems.add(new MessageItem(array.getJSONObject(i)));
                         }
                         mAdapter.notifyDataSetChanged();
