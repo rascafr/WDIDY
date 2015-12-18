@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wdidy.app.account.UserAccount;
@@ -23,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
 
         final SharedPreferences prefs_Read;
         final SharedPreferences.Editor prefs_Write;
+        ((TextView) findViewById(R.id.tvVersion)).setText("Version " + BuildConfig.VERSION_NAME);
 
         prefs_Read = getSharedPreferences(Constants.PREFS_ACCOUNT_KEY, 0);
         prefs_Write = prefs_Read.edit();
@@ -41,6 +43,7 @@ public class SplashActivity extends AppCompatActivity {
                 if (!BuildConfig.VERSION_NAME.equals(prefs_Read.getString(Constants.PREFS_APP_VERSION, ""))) {
                     userAccount.removeAccount(SplashActivity.this);
                     prefs_Write.putString(Constants.PREFS_APP_VERSION, BuildConfig.VERSION_NAME);
+                    prefs_Write.apply();
                     Toast.makeText(SplashActivity.this, "Mise à jour effectuée. Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -55,10 +58,11 @@ public class SplashActivity extends AppCompatActivity {
                     i = new Intent(SplashActivity.this, LoginActivity.class);
                 }
                 startActivity(i);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
 
             }
-        }, 750);
+        }, 1000);
     }
 
     @Override
