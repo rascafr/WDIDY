@@ -113,6 +113,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             points.add(new LatLng(pointItem.getLat(), pointItem.getLon()));
                         }
 
+                        // TODO catch Android 6.0 error
                         map.setMyLocationEnabled(true);
 
                         if (points.size() > 0) {

@@ -114,7 +114,9 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         provider = mLocationManager.getBestProvider(criteria, false);
-        Location location = mLocationManager.getLastKnownLocation(provider);
+
+        // TODO corriger : Unable to start activity ComponentInfo{com.wdidy.app/com.wdidy.app.LogGPSActivity}: java.lang.IllegalArgumentException: invalid provider: null
+        //if (provider != null)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -125,11 +127,13 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for Activity#requestPermissions for more details.
+                Location location = mLocationManager.getLastKnownLocation(provider);
+                onLocationChanged(location);
                 return;
             }
         }
         /*mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);*/
-        onLocationChanged(location);
+
 
         // Display user informations
         userAccount = new UserAccount();
