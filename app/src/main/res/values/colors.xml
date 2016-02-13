@@ -5,6 +5,9 @@
     <color name="colorPrimaryDark">#ba3e32</color>
     <color name="colorAccent">#5b5b5b</color>
     <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="almost_black">#222</color>
+    <color name="divider">#DCDCDC</color>
     <color name="colorNormal">#e47569</color>
     <color name="colorPressed">#974e46</color>
 
@@ -18,5 +21,9 @@
     <color name="color_message_text_friend">#484848</color>
     <color name="color_message_user">#ef5350</color>
     <color name="color_message_text_user">#f0f0f0</color>
+    <color name="back_recylist">@color/md_grey_200</color>
+
+    <!-- Part of Material palette -->
+    <color name="md_grey_200">#eeeeee</color>
 
 </resources>

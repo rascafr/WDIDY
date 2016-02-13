@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 asyncLogin.getDialog().hide();
                 if (sentToken) {
-                    Intent i = new Intent(LoginActivity.this, TracksListActivity.class);
+                    Intent i = new Intent(LoginActivity.this, MainActivityTab.class);
                     LoginActivity.this.startActivity(i);
                     LoginActivity.this.finish();
                 } else {

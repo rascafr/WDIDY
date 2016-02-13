@@ -1,75 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LogGPSActivity">
+    android:background="@color/back_recylist"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="16dp"
-        android:id="@+id/linearLayout">
-
-        <ProgressBar
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:id="@+id/progressWait"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loading"
-            android:id="@+id/tvTemp"/>
-
-    </LinearLayout>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enable GPS"
-        android:checked="false"
-        android:id="@+id/chkGps"
-        android:layout_margin="16dp"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignParentStart="true"/>
-
-    <LinearLayout
+    <com.wdidy.app.slidingtab.SlidingTabLayout
+        android:id="@+id/home_fragment_tabs"
+        android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/linearLayout2">
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tvUserInfo"
-            android:layout_margin="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:layout_above="@+id/linearLayout2">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="8dp"
-            android:text="Profil utilisateur"/>
-
-    </RelativeLayout>
-
-</RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/home_fragment_pager"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent" />
+</LinearLayout>

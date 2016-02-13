@@ -1,4 +1,4 @@
-package com.wdidy.app;
+package com.wdidy.app.tabs;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,14 +8,11 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -31,6 +28,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.wdidy.app.Constants;
+import com.wdidy.app.LogGPSActivity;
+import com.wdidy.app.MapActivity;
+import com.wdidy.app.R;
 import com.wdidy.app.account.UserAccount;
 import com.wdidy.app.listeners.RecyclerItemClickListener;
 import com.wdidy.app.track.DataManager;
@@ -50,9 +51,9 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by Rascafr on 06/11/2015.
+ * Created by Rascafr on 13/02/2016.
  */
-public class TracksListActivity extends AppCompatActivity {
+public class TimelineTab extends Fragment {
 
     // Adapter - RecyclerView
     private TrackAdapter mAdapter;
@@ -60,6 +61,7 @@ public class TracksListActivity extends AppCompatActivity {
 
     // UI Layout
     private ProgressBar progressNewTrack;
+    private ProgressBar pgLoading;
     private View viewNewTrack;
     private FloatingActionButton fabNewTrack;
     private CircleImageView profileCircleView;
@@ -74,10 +76,10 @@ public class TracksListActivity extends AppCompatActivity {
     private Context context;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tracks);
-        context = this;
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.tab_tracks, container, false);
+
+        context = getActivity();
 
         // Init model
         DataManager.getInstance().initTracksItems();
@@ -85,28 +87,30 @@ public class TracksListActivity extends AppCompatActivity {
 
         // Init profile
         userAccount = new UserAccount();
-        userAccount.readAccountPromPrefs(this);
+        userAccount.readAccountPromPrefs(context);
 
         // Init RecyclerView
-        recyList = (RecyclerView) findViewById(R.id.recyList);
+        recyList = (RecyclerView) rootView.findViewById(R.id.recyList);
         recyList.setHasFixedSize(true);
 
         // Create adapter and assign it to RecyclerView
         mAdapter = new TrackAdapter();
-        LinearLayoutManager llm = new LinearLayoutManager(this);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyList.setLayoutManager(llm);
         recyList.setAdapter(mAdapter);
 
         // Init UI
-        progressNewTrack = (ProgressBar) findViewById(R.id.progressLoading);
-        viewNewTrack = findViewById(R.id.viewCircle);
-        fabNewTrack = (FloatingActionButton) findViewById(R.id.fab);
+        pgLoading = (ProgressBar) rootView.findViewById(R.id.progressLoading);
+        pgLoading.setVisibility(View.INVISIBLE);
+        progressNewTrack = (ProgressBar) rootView.findViewById(R.id.progressCreate);
+        viewNewTrack = rootView.findViewById(R.id.viewCircle);
+        fabNewTrack = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fabNewTrack.attachToRecyclerView(recyList);
         progressNewTrack.setVisibility(View.INVISIBLE);
         progressNewTrack.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         viewNewTrack.setVisibility(View.INVISIBLE);
-        profileCircleView = (CircleImageView) findViewById(R.id.profileCircleView);
+        profileCircleView = (CircleImageView) rootView.findViewById(R.id.profileCircleView);
 
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
@@ -115,7 +119,7 @@ public class TracksListActivity extends AppCompatActivity {
                 .displayer(new FadeInBitmapDisplayer(300)).build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-                getApplicationContext())
+                getActivity())
                 .defaultDisplayImageOptions(defaultOptions)
                 .memoryCache(new WeakMemoryCache())
                 .discCacheSize(100 * 1024 * 1024).build();
@@ -138,12 +142,12 @@ public class TracksListActivity extends AppCompatActivity {
         asyncTracks.execute(userAccount.getUserID());
 
         // On click listener → see Map
-        recyList.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+        recyList.addOnItemTouchListener(new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent i = new Intent(TracksListActivity.this, MapActivity.class);
+                Intent i = new Intent(context, MapActivity.class);
                 i.putExtra(Constants.INTENT_TRACK_ID, position);
-                TracksListActivity.this.startActivity(i);
+                startActivity(i);
             }
         }));
 
@@ -154,13 +158,13 @@ public class TracksListActivity extends AppCompatActivity {
         fabNewTrack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MaterialDialog.Builder(TracksListActivity.this)
+                new MaterialDialog.Builder(context)
                         .title("Nouveau trajet")
                         .content("Entrez un nom pour votre nouveau trajet (vous pourrez le modifier plus tard)")
                         .input("Soirée, balade, ...", "", false, new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog materialDialog, CharSequence trackName) {
-                                Utilities.hideSoftKeyboard(TracksListActivity.this);
+                                Utilities.hideSoftKeyboard(getActivity());
                                 AsyncNewTrack asyncNewTrack = new AsyncNewTrack();
                                 asyncNewTrack.execute(trackName.toString());
                             }
@@ -170,7 +174,9 @@ public class TracksListActivity extends AppCompatActivity {
         });
 
         // Verify GPS permissions
-        verifyGPSPermissions(this);
+        verifyGPSPermissions(getActivity());
+
+        return rootView;
     }
 
     /**
@@ -225,11 +231,13 @@ public class TracksListActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pgLoading.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(String data) {
             super.onPostExecute(data);
+            pgLoading.setVisibility(View.INVISIBLE);
 
             if (Utilities.isNetworkDataValid(data)) {
 
@@ -246,7 +254,7 @@ public class TracksListActivity extends AppCompatActivity {
 
                     } else {
 
-                        new MaterialDialog.Builder(TracksListActivity.this)
+                        new MaterialDialog.Builder(context)
                                 .title("Erreur")
                                 .content("Cause : " + jsonObject.getString("cause"))
                                 .negativeText("Fermer")
@@ -255,10 +263,10 @@ public class TracksListActivity extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(TracksListActivity.this, "Erreur serveur", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Erreur serveur", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(TracksListActivity.this, "Erreur réseau", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Erreur réseau", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -298,12 +306,12 @@ public class TracksListActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(data);
                     if (jsonObject.getInt("error") == 0) {
                         int track_id = jsonObject.getJSONObject("data").getInt("track_id");
-                        Toast.makeText(TracksListActivity.this, "Current track ID : " + track_id, Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(TracksListActivity.this, LogGPSActivity.class);
+                        Toast.makeText(context, "Current track ID : " + track_id, Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(context, LogGPSActivity.class);
                         i.putExtra(Constants.INTENT_TRACK_ID, track_id);
-                        TracksListActivity.this.startActivity(i);
+                        startActivity(i);
                     } else {
-                        new MaterialDialog.Builder(TracksListActivity.this)
+                        new MaterialDialog.Builder(context)
                                 .title("Erreur")
                                 .content("Cause : " + jsonObject.getString("cause"))
                                 .negativeText("Fermer")
@@ -312,10 +320,10 @@ public class TracksListActivity extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(TracksListActivity.this, "Erreur serveur", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Erreur serveur", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(TracksListActivity.this, "Erreur réseau", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Erreur réseau", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -333,6 +341,8 @@ public class TracksListActivity extends AppCompatActivity {
             return ConnexionUtils.postServerData(Constants.API_NEW_TRACK, pairs);
         }
     }
+
+    // TODO following goes in MainActivity
 
     // GPS Permissions
     private final static int PERMISSION_REQUEST_CODE = 42;
@@ -385,13 +395,13 @@ public class TracksListActivity extends AppCompatActivity {
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                                    verifyGPSPermissions(TracksListActivity.this);
+                                    verifyGPSPermissions(getActivity());
                                 }
                             })
                             .onNegative(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                                    TracksListActivity.this.finish();
+                                    getActivity().finish();
                                 }
                             })
                             .show();
@@ -402,34 +412,5 @@ public class TracksListActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            userAccount.removeAccount(context);
-            Intent i = new Intent(context, LoginActivity.class);
-            startActivity(i);
-            finish();
-            return true;
-        } else if (id == R.id.action_friends) {
-            Intent i = new Intent(TracksListActivity.this, FriendsActivity.class);
-            TracksListActivity.this.startActivity(i);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

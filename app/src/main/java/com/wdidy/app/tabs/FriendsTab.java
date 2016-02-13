@@ -1,23 +1,27 @@
-package com.wdidy.app;
+package com.wdidy.app.tabs;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.wdidy.app.Constants;
+import com.wdidy.app.MessageActivity;
+import com.wdidy.app.R;
 import com.wdidy.app.account.UserAccount;
 import com.wdidy.app.friend.FriendItem;
 import com.wdidy.app.listeners.RecyclerItemClickListener;
-import com.wdidy.app.track.TrackItem;
 import com.wdidy.app.utils.ConnexionUtils;
 import com.wdidy.app.utils.Utilities;
 
@@ -25,20 +29,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by Rascafr on 16/12/2015.
+ * Created by Rascafr on 13/02/2016.
  */
-public class FriendsActivity extends AppCompatActivity {
+public class FriendsTab extends Fragment {
 
     // Adapter
     private FriendAdapter mAdapter;
+
+    // UI Layout
+    private ProgressBar pgLoading;
     private RecyclerView recyList;
 
     // Model
@@ -47,25 +52,32 @@ public class FriendsActivity extends AppCompatActivity {
     // User profile
     UserAccount userAccount;
 
+    // Android
+    private Context context;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.tab_friends, container, false);
+        context = getActivity();
 
         // Init model
         friendItems = new ArrayList<>();
 
         // Init profile
         userAccount = new UserAccount();
-        userAccount.readAccountPromPrefs(this);
+        userAccount.readAccountPromPrefs(context);
 
         // Init RecyclerView
-        recyList = (RecyclerView) findViewById(R.id.recyList);
+        recyList = (RecyclerView) rootView.findViewById(R.id.recyList);
         recyList.setHasFixedSize(true);
+
+        // Init layout
+        pgLoading = (ProgressBar) rootView.findViewById(R.id.progressLoading);
+        pgLoading.setVisibility(View.INVISIBLE);
 
         // Create adapter and assign it to RecyclerView
         mAdapter = new FriendAdapter();
-        LinearLayoutManager llm = new LinearLayoutManager(this);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyList.setLayoutManager(llm);
         recyList.setAdapter(mAdapter);
@@ -75,15 +87,17 @@ public class FriendsActivity extends AppCompatActivity {
         asyncListFriends.execute();
 
         // On click listener → messages
-        recyList.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+        recyList.addOnItemTouchListener(new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent i = new Intent(FriendsActivity.this, MessageActivity.class);
+                Intent i = new Intent(context, MessageActivity.class);
                 i.putExtra(Constants.INTENT_CONV_FRIEND_ID, friendItems.get(position).getFriendID());
                 i.putExtra(Constants.INTENT_CONV_FRIEND_NAME, friendItems.get(position).getName());
-                FriendsActivity.this.startActivity(i);
+                startActivity(i);
             }
         }));
+
+        return rootView;
     }
 
     /**
@@ -140,11 +154,13 @@ public class FriendsActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pgLoading.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(String data) {
             super.onPostExecute(data);
+            pgLoading.setVisibility(View.INVISIBLE);
 
             if (Utilities.isNetworkDataValid(data)) {
 
@@ -157,7 +173,7 @@ public class FriendsActivity extends AppCompatActivity {
                         }
                         mAdapter.notifyDataSetChanged();
                     } else {
-                        new MaterialDialog.Builder(FriendsActivity.this)
+                        new MaterialDialog.Builder(context)
                                 .title("Erreur")
                                 .content("Cause : " + jsonObject.getString("cause"))
                                 .negativeText("Fermer")
@@ -166,10 +182,10 @@ public class FriendsActivity extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(FriendsActivity.this, "Erreur serveur", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Erreur serveur", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(FriendsActivity.this, "Erreur réseau", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Erreur réseau", Toast.LENGTH_SHORT).show();
             }
         }
 

@@ -6,6 +6,7 @@
     <string name="action_logout">Déconnexion</string>
     <string name="action_new_track">Créer trajet</string>
     <string name="action_tracks_list">Mes trajets</string>
+    <string name="action_settings">Réglages</string>
     <string name="action_friends">Mes amis</string>
 
     <string name="loading">Chargement ...</string>
@@ -28,6 +29,12 @@
         <item>@drawable/ic_slide</item>
         <item>@drawable/ic_slide</item>
         <item>@drawable/ic_slide</item>
+    </array>
+
+    <array name="tab_names">
+        <item>Timeline</item>
+        <item>Messages</item>
+        <item>Amis</item>
     </array>
 
     <!-- GCM -->

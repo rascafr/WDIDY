@@ -53,7 +53,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 Intent i;
                 if (userAccount.isCreated()) {
-                    i = new Intent(SplashActivity.this, TracksListActivity.class);
+                    i = new Intent(SplashActivity.this, MainActivityTab.class);
                 } else {
                     i = new Intent(SplashActivity.this, LoginActivity.class);
                 }

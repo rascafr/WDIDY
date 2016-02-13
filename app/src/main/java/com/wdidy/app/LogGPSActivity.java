@@ -59,7 +59,9 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_log_gps);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get preferences
         prefs_Read = getSharedPreferences(Constants.PREFS_ACCOUNT_KEY, 0);
@@ -201,36 +203,6 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
         progressLocalisation.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            userAccount.removeAccount(LogGPSActivity.this);
-            Intent i = new Intent(LogGPSActivity.this, LoginActivity.class);
-            LogGPSActivity.this.startActivity(i);
-            LogGPSActivity.this.finish();
-            return true;
-        } else if (id == R.id.action_tracks_list) {
-            Intent i = new Intent(LogGPSActivity.this, TracksListActivity.class);
-            LogGPSActivity.this.startActivity(i);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     /**
      * To handle location's changes
@@ -338,5 +310,16 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
             pairs.put("address", param[3]);
             return ConnexionUtils.postServerData(Constants.API_ADD_POINT, pairs);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                LogGPSActivity.this.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

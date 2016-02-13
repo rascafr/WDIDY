@@ -1,40 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="72dp">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/friendCircleView" />
+              android:layout_height="wrap_content"
+              android:clickable="true"
+              android:foreground="?android:attr/selectableItemBackground"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_height="72dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tvFriendName"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/friendCircleView"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:text="Hululer M'voyez"/>
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
-        <TextView
-            android:id="@+id/tvFriendCity"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="St bite sur loire"/>
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvFriendName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="4dp"
+                android:text="Hululer M'voyez"
+                android:textColor="@color/almost_black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvFriendCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="St bite sur loire"/>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_marginLeft="88dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
 
 </LinearLayout>

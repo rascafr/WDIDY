@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Localisation">
+
+    <CheckBoxPreference android:title="Localisation précise"
+                        android:defaultValue="true"
+                        android:summary="Si coché, l'application utilisera le GPS comme source de localisation. Le GPS est plsu précis, mais consomme davantage de batterie"
+                        android:key="settings.general.autoupdate" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

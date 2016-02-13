@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_gravity="center"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="16dp"
+            android:id="@+id/profileCircleView" />
+
+        <TextView
+            android:id="@+id/tvTrackText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textSize="16sp"
+            android:text="Voici le résumé de vos trajets :"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressLoading"
+            android:visibility="invisible"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyList"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:footerDividersEnabled="true"
+            android:drawSelectorOnTop="true"/>
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/ic_add_white"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimaryDark"
+            fab:fab_colorRipple="@color/colorRipple"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <View
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/circle_back"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="bottom|end"
+            android:visibility="invisible"
+            android:id="@+id/viewCircle"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ProgressBar
+            android:id="@+id/progressCreate"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:indeterminate="true"
+            android:layout_margin="10dp"
+            android:layout_gravity="bottom|end"
+            android:visibility="visible"
+            android:layout_alignTop="@+id/viewCircle"
+            android:layout_alignLeft="@+id/viewCircle"
+            android:layout_alignStart="@+id/viewCircle"
+            android:layout_alignBottom="@+id/viewCircle"
+            android:layout_alignRight="@+id/viewCircle"
+            android:layout_alignEnd="@+id/viewCircle" />
+
+    </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -81,6 +82,8 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get layout elements
         etMessage = (EditText) findViewById(R.id.etMessage);
@@ -419,7 +422,7 @@ public class MessageActivity extends AppCompatActivity {
         if (progressMessage != null) progressMessage.setVisibility(View.INVISIBLE);
 
         if (mHandler == null) {
-            mHandler = new android.os.Handler();
+            mHandler = new Handler();
             mHandler.postDelayed(updateTimerThread, RUN_START);
         } else {
             mHandler.removeCallbacks(updateTimerThread);
@@ -460,4 +463,15 @@ public class MessageActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                MessageActivity.this.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
