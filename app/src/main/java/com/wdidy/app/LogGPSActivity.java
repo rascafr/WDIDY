@@ -113,7 +113,7 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
         locationUtils = new LocationUtils(getApplicationContext());
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-        provider = mLocationManager.getBestProvider(criteria, false);
+        provider = mLocationManager.getBestProvider(criteria, true);
 
         // TODO corriger : Unable to start activity ComponentInfo{com.wdidy.app/com.wdidy.app.LogGPSActivity}: java.lang.IllegalArgumentException: invalid provider: null
         //if (provider != null)
@@ -192,10 +192,10 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
             }
         }
         if (!prefs_Read.getBoolean(Constants.PREFS_GPS_PROVIDER, false)) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            mLocationManager.requestLocationUpdates(provider, 0, 0, this);
             Toast.makeText(LogGPSActivity.this, "Mode : NETWORK", Toast.LENGTH_SHORT).show();
         } else {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            mLocationManager.requestLocationUpdates(provider, 0, 0, this);
             Toast.makeText(LogGPSActivity.this, "Mode : GPS", Toast.LENGTH_SHORT).show();
         }
         progressLocalisation.setVisibility(View.VISIBLE);

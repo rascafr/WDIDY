@@ -158,7 +158,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                     } else {
-                        new MaterialDialog.Builder(LoginActivity.this)
+                        dialog.hide();
+                        dialog = new MaterialDialog.Builder(LoginActivity.this)
                                 .title("Erreur")
                                 .content("Cause : " + jsonObject.getString("cause"))
                                 .negativeText("Fermer")
@@ -170,7 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Erreur serveur", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                new MaterialDialog.Builder(LoginActivity.this)
+                dialog.hide();
+                dialog = new MaterialDialog.Builder(LoginActivity.this)
                         .title("Oups !")
                         .content("Impossible d'accéder au réseau. Veuillez vérifier votre connexion internet puis réessayer.")
                         .negativeText("Fermer")
