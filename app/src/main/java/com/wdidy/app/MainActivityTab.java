@@ -1,14 +1,20 @@
 package com.wdidy.app;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdidy.app.account.UserAccount;
 import com.wdidy.app.slidingtab.SlidingTabLayout;
 import com.wdidy.app.slidingtab.ViewPagerAdapter;
@@ -47,6 +53,8 @@ public class MainActivityTab extends AppCompatActivity {
         mTabs.setDistributeEvenly(true);
         mTabs.setViewPager(mPager);
 
+        // Verify GPS permissions
+        verifyGPSPermissions(MainActivityTab.this);
     }
 
     @Override
@@ -77,5 +85,75 @@ public class MainActivityTab extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // GPS Permissions
+    private final static int PERMISSION_REQUEST_CODE = 42;
+    private static String[] PERMISSIONS_LOCATION = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
+
+    /**
+     * Checks if the app has permission to use GPS
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyGPSPermissions(Activity activity) {
+        // Check if we have write permission
+        int permission_fine = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permission_coarse = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (permission_fine != PackageManager.PERMISSION_GRANTED || permission_coarse != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_LOCATION,
+                    PERMISSION_REQUEST_CODE
+            );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay!
+                    Toast.makeText(context, "Permission GPS accordée ! :)", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    // permission denied, boo!
+                    new MaterialDialog.Builder(context)
+                            .title("Faites-nous confiance")
+                            .content("WDIDY a besoin d'utiliser le GPS pour enregistrer vos soirées.\nVous devez accepter la demande de permission ...")
+                            .cancelable(false)
+                            .negativeText("Refuser")
+                            .positiveText("Réessayer")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                    verifyGPSPermissions(MainActivityTab.this);
+                                }
+                            })
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                    MainActivityTab.this.finish();
+                                }
+                            })
+                            .show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

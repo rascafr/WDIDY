@@ -101,10 +101,10 @@ public class LogGPSActivity extends AppCompatActivity implements LocationListene
                     }
                 }
                 if (!prefs_Read.getBoolean(Constants.PREFS_GPS_PROVIDER, false)) {
-                    mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LogGPSActivity.this);
+                    mLocationManager.requestLocationUpdates(provider, 0, 0, LogGPSActivity.this);
                     Toast.makeText(LogGPSActivity.this, "Mode : NETWORK", Toast.LENGTH_SHORT).show();
                 } else {
-                    mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LogGPSActivity.this);
+                    mLocationManager.requestLocationUpdates(provider, 0, 0, LogGPSActivity.this);
                     Toast.makeText(LogGPSActivity.this, "Mode : GPS", Toast.LENGTH_SHORT).show();
                 }
                 progressLocalisation.setVisibility(View.VISIBLE);
