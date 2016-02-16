@@ -2,7 +2,6 @@ package com.wdidy.app;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -18,7 +17,6 @@ import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
@@ -28,6 +26,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdidy.app.account.UserAccount;
 import com.wdidy.app.utils.ConnexionUtils;
+import com.wdidy.app.utils.LocationUtils;
 import com.wdidy.app.utils.Utilities;
 
 import org.json.JSONException;
