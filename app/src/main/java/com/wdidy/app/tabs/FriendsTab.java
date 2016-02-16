@@ -131,7 +131,7 @@ public class FriendsTab extends Fragment {
             return new FriendViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_friend, viewGroup, false));
         }
 
-        // Classic View Holder for history item
+        // Classic View Holder for friend item
         public class FriendViewHolder extends RecyclerView.ViewHolder {
 
             protected TextView vName, vCity;

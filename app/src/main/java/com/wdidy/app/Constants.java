@@ -44,6 +44,7 @@ public class Constants {
     public static final String API_LIST_FRIENDS = URL_API + "friend/list";
     public static final String API_SINGLE_CONVERSATION = URL_API + "message/single";
     public static final String API_POST_MESSAGE = URL_API + "message/post";
+    public static final String API_LIST_CONVERSATIONS = URL_API + "message/list";
     public static final String API_REGISTER_DEVICE = URL_API + "push/register";
 
 }

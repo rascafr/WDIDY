@@ -1,42 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
+              android:layout_height="wrap_content"
               android:clickable="true"
               android:foreground="?android:attr/selectableItemBackground"
-              android:layout_height="72dp">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/convCircleView" />
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_height="72dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tvConvName"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/convCircleView"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:textColor="@color/almost_black"
-            android:textSize="16sp"
-            android:text="Jean Guy du peuple"/>
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
-        <TextView
-            android:id="@+id/tvConvLast"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="On tise ?"/>
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvLastDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/color_message_date"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentRight="true"
+                    android:text="12:15"/>
+
+                <TextView
+                    android:id="@+id/tvConvName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="4dp"
+                    android:text="Jean Guy du Peuple"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:textColor="@color/almost_black"
+                    android:layout_marginRight="8dp"
+                    android:ellipsize="end"
+                    android:textSize="16sp"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/tvLastDate"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvLastMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_gravity="center_vertical"
+                android:text="St bite sur loire"/>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_marginLeft="88dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
 
 </LinearLayout>
