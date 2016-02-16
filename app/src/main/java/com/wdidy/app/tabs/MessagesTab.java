@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.wdidy.app.account.UserAccount;
 import com.wdidy.app.friend.FriendItem;
 import com.wdidy.app.listeners.RecyclerItemClickListener;
 import com.wdidy.app.utils.ConnexionUtils;
+import com.wdidy.app.utils.DateSimplifier;
 import com.wdidy.app.utils.Utilities;
 
 import org.json.JSONArray;
@@ -57,6 +59,7 @@ public class MessagesTab extends Fragment {
 
     // Android
     private Context context;
+    private static boolean running = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,10 +89,6 @@ public class MessagesTab extends Fragment {
         recyList.setLayoutManager(llm);
         recyList.setAdapter(mAdapter);
 
-        // Fetch data from server
-        AsyncConversations asyncConversations = new AsyncConversations();
-        asyncConversations.execute();
-
         // On click listener → messages
         recyList.addOnItemTouchListener(new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -107,6 +106,8 @@ public class MessagesTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        // Fetch data from server
         AsyncConversations asyncConversations = new AsyncConversations();
         asyncConversations.execute();
     }
@@ -167,6 +168,8 @@ public class MessagesTab extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            if (running) this.cancel(true);
+            running = true;
             conversationItems.clear();
             mAdapter.notifyDataSetChanged();
             pgLoading.setVisibility(View.VISIBLE);
@@ -202,6 +205,8 @@ public class MessagesTab extends Fragment {
             } else {
                 Toast.makeText(context, "Erreur réseau", Toast.LENGTH_SHORT).show();
             }
+
+            running = false;
         }
 
         @Override
@@ -222,7 +227,7 @@ public class MessagesTab extends Fragment {
         public ConversationItem(JSONObject obj) throws JSONException {
             this.senderName = obj.getString("last_name");
             this.friendName = obj.getString("firstname") + " " + obj.getString("lastname");
-            this.sendDate = obj.getString("date");
+            this.sendDate = new DateSimplifier(obj.getString("date")).getEasyDate();
             this.friendID = obj.getString("IDfriend");
             this.friendPict = Constants.URL_PROFILE_PICTS + obj.getString("imgLink");
             this.text = obj.getString("message");
