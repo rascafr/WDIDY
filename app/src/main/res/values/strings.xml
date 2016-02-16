@@ -39,5 +39,6 @@
 
     <!-- GCM -->
     <string name="play_api_push">327033001800</string>
+    <string name="google_app_id">327033001800</string>
 
 </resources>

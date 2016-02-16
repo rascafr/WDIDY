@@ -57,8 +57,6 @@ public class DateSimplifier {
             paramCalendar.set(year, month - 1, day);
             int y_day = paramCalendar.get(Calendar.DAY_OF_YEAR);
 
-            Log.d("DATE", "Month day : " + c_day + "↔" + day + ", Absolute day : " + c_y_day + "↔" + y_day + ", Month : " + c_month + "↔" + month);
-
             // If same year
             if (year == c_year) {
                 // If same month and same day
