@@ -1,6 +1,6 @@
-# WDIDY
+# WDIDY 1.6.2
 
-WDIDY? - What Did I Do Yesterday ?
+WDIDY? - What Did I Do Yesterday ? → [Fichier APK](https://github.com/rascafr/WDIDY/raw/master/app/app-release.apk)
 
 ![Alt text](wdidy.png) 
 
