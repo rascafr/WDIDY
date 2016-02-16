@@ -3,6 +3,7 @@ package com.wdidy.app;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -76,7 +77,7 @@ public class MessageActivity extends AppCompatActivity {
     // Others
     private Vibrator vibrator;
     private long[] pattern = {0, 200, 300, 200, 300, 200};
-    private boolean sendAllowed = false;
+    private boolean sendAllowed = false, fromNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,16 +105,18 @@ public class MessageActivity extends AppCompatActivity {
         // Get friend identifier
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if(extras == null) {
+            if (extras == null) {
                 Toast.makeText(MessageActivity.this, "Erreur de l'application (c'est pas normal)", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 friendID = extras.getString(Constants.INTENT_CONV_FRIEND_ID);
                 friendName = extras.getString(Constants.INTENT_CONV_FRIEND_NAME);
+                fromNotification = extras.getBoolean(Constants.INTENT_CONV_FROM_GCM);
             }
         } else {
             friendID = (String) savedInstanceState.getSerializable(Constants.INTENT_CONV_FRIEND_ID);
             friendName = (String) savedInstanceState.getSerializable(Constants.INTENT_CONV_FRIEND_NAME);
+            fromNotification = (boolean) savedInstanceState.getSerializable(Constants.INTENT_CONV_FROM_GCM);
         }
 
         // Set title (friend's name)
@@ -435,7 +438,7 @@ public class MessageActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        if( mHandler != null) {
+        if (mHandler != null) {
             mHandler.removeCallbacks(updateTimerThread);
         }
         run = false;
@@ -469,7 +472,13 @@ public class MessageActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                MessageActivity.this.onBackPressed();
+                // On revient à l'activité Main si pas démarrée, sinon on appelle la fonction de retour native
+                if (fromNotification) {
+                    startActivity(new Intent(this, MainActivityTab.class));
+                    finish();
+                } else {
+                    MessageActivity.this.onBackPressed();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -30,9 +30,11 @@
         android:paddingRight="10dp"
         android:background="@drawable/speech_friend"
         android:textColor="@color/color_message_text_friend"
+        android:textColorLink="@color/color_message_link_friend"
         android:id="@+id/messageText"
         android:textSize="16sp"
         android:text="Hello"
+        android:autoLink="web"
         android:layout_below="@+id/messageDate"
         android:layout_alignParentStart="true"/>
 

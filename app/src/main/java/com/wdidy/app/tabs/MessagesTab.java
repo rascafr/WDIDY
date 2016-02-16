@@ -96,6 +96,7 @@ public class MessagesTab extends Fragment {
                 Intent i = new Intent(context, MessageActivity.class);
                 i.putExtra(Constants.INTENT_CONV_FRIEND_ID, conversationItems.get(position).getFriendID());
                 i.putExtra(Constants.INTENT_CONV_FRIEND_NAME, conversationItems.get(position).getFriendName());
+                i.putExtra(Constants.INTENT_CONV_FROM_GCM, false); // No needed to restart MainActivity
                 startActivity(i);
             }
         }));

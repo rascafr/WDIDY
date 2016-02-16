@@ -40,12 +40,14 @@ public class SplashActivity extends AppCompatActivity {
                 UserAccount userAccount = new UserAccount();
 
                 // Si la version est différente et nécessite une suppression des paramètres account
-                if (!BuildConfig.VERSION_NAME.equals(prefs_Read.getString(Constants.PREFS_APP_VERSION, ""))) {
+                /*if (!BuildConfig.VERSION_NAME.equals(prefs_Read.getString(Constants.PREFS_APP_VERSION, ""))) {
                     userAccount.removeAccount(SplashActivity.this);
                     prefs_Write.putString(Constants.PREFS_APP_VERSION, BuildConfig.VERSION_NAME);
                     prefs_Write.apply();
                     Toast.makeText(SplashActivity.this, "Mise à jour effectuée. Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
                 }
+                // On considère que tout le monde a mis à jour WDIDY au moins jusqu'à la version 1.4
+                */
 
                 // Si profil non crée -> login
                 // Sinon -> activité principale

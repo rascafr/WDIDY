@@ -19,8 +19,10 @@
     <color name="color_message_date">#aaa</color>
     <color name="color_message_friend">#d7ccc8</color>
     <color name="color_message_text_friend">#484848</color>
+    <color name="color_message_link_friend">#be5151</color>
     <color name="color_message_user">#ef5350</color>
     <color name="color_message_text_user">#f0f0f0</color>
+    <color name="color_message_link_user">#fac5c5</color>
     <color name="back_recylist">@color/md_grey_200</color>
 
     <!-- Part of Material palette -->

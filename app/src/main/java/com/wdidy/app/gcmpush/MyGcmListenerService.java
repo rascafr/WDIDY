@@ -107,6 +107,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 appIntent = new Intent(this, MessageActivity.class);
                 appIntent.putExtra(Constants.INTENT_CONV_FRIEND_ID, jsonExtra.getString("friend_id"));
                 appIntent.putExtra(Constants.INTENT_CONV_FRIEND_NAME, jsonExtra.getString("friend_name"));
+                appIntent.putExtra(Constants.INTENT_CONV_FROM_GCM, true); // Indicates that an intent to MainActivity is need if MessageActivity is closed
                 break;
         }
 

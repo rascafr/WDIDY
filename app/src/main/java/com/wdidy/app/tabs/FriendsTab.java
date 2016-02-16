@@ -93,6 +93,7 @@ public class FriendsTab extends Fragment {
                 Intent i = new Intent(context, MessageActivity.class);
                 i.putExtra(Constants.INTENT_CONV_FRIEND_ID, friendItems.get(position).getFriendID());
                 i.putExtra(Constants.INTENT_CONV_FRIEND_NAME, friendItems.get(position).getName());
+                i.putExtra(Constants.INTENT_CONV_FROM_GCM, false); // No needed to restart MainActivity
                 startActivity(i);
             }
         }));

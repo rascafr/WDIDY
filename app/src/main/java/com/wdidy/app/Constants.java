@@ -23,6 +23,7 @@ public class Constants {
     public final static String INTENT_TRACK_NAME = "intent.com.wdidy.app.trackname";
     public final static String INTENT_CONV_FRIEND_ID = "intent.com.wdidy.app.conversation.friendID";
     public final static String INTENT_CONV_FRIEND_NAME = "intent.com.wdidy.app.conversation.friendName";
+    public final static String INTENT_CONV_FROM_GCM = "intent.com.wdidy.app.conversation.from_gcm";
 
     // Push Intents
     public final static String INTENT_PUSH_NEW_MESSAGE = "intent.com.wdidy.app.push.conversation.new";

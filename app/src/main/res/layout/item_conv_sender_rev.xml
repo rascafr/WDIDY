@@ -31,9 +31,11 @@
         android:paddingRight="20dp"
         android:background="@drawable/speech_sender"
         android:textColor="@color/color_message_text_user"
+        android:textColorLink="@color/color_message_link_user"
         android:id="@+id/messageText"
         android:textSize="16sp"
         android:text="Hello"
+        android:autoLink="web"
         android:layout_below="@+id/messageDate"
         android:layout_alignParentEnd="true"/>
 
