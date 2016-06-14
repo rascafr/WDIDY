@@ -48,4 +48,7 @@ public class Constants {
     public static final String API_LIST_CONVERSATIONS = URL_API + "message/list";
     public static final String API_REGISTER_DEVICE = URL_API + "push/register";
 
+    // Bus bundle
+    public static final String BUNDLE_TRACK_ID = "bundle.track_id";
+
 }

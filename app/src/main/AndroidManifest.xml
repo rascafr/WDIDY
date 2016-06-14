@@ -152,6 +152,9 @@
 
         <!-- Boot receiver -->
         <!-- We don't need to register to boot because GCM do it by itself :D -->
+
+        <!-- Test binder Service -->
+        <service android:name=".gps.WDIDYLocationService"/>
     </application>
 
 </manifest>

@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.wdidy.app.Constants;
 import com.wdidy.app.MessageActivity;
 import com.wdidy.app.R;
 import com.wdidy.app.account.UserAccount;
-import com.wdidy.app.friend.FriendItem;
 import com.wdidy.app.listeners.RecyclerItemClickListener;
 import com.wdidy.app.utils.ConnexionUtils;
 import com.wdidy.app.utils.DateSimplifier;
@@ -63,7 +61,7 @@ public class MessagesTab extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tab_empty, container, false);
+        View rootView = inflater.inflate(R.layout.tab_messages, container, false);
 
         context = getActivity();
 

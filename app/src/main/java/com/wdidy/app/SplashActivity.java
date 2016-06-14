@@ -8,9 +8,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wdidy.app.account.UserAccount;
+import com.wdidy.app.gps.WDIDYLocationService;
 
 /**
  * Created by Rascafr on 23/10/2015.
@@ -31,6 +31,9 @@ public class SplashActivity extends AppCompatActivity {
 
         ProgressBar progressLoading = (ProgressBar) findViewById(R.id.progressSplash);
         progressLoading.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+
+        // Start main (model) service
+        startService(new Intent(this, WDIDYLocationService.class));
 
         new Handler().postDelayed(new Runnable() {
 

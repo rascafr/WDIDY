@@ -1,14 +1,10 @@
 package com.wdidy.app.tabs;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.melnykov.fab.FloatingActionButton;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -33,12 +28,15 @@ import com.wdidy.app.LogGPSActivity;
 import com.wdidy.app.MapActivity;
 import com.wdidy.app.R;
 import com.wdidy.app.account.UserAccount;
+import com.wdidy.app.bus.BusRequest;
+import com.wdidy.app.bus.BusType;
 import com.wdidy.app.listeners.RecyclerItemClickListener;
 import com.wdidy.app.track.DataManager;
 import com.wdidy.app.track.TrackItem;
 import com.wdidy.app.utils.ConnexionUtils;
 import com.wdidy.app.utils.Utilities;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,6 +72,9 @@ public class TimelineTab extends Fragment {
 
     // Android
     private Context context;
+
+    // Bus
+    private EventBus bus = EventBus.getDefault();
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -307,6 +308,11 @@ public class TimelineTab extends Fragment {
                         Intent i = new Intent(context, LogGPSActivity.class);
                         i.putExtra(Constants.INTENT_TRACK_ID, track_id);
                         startActivity(i);
+
+                        BusRequest startGPSRequest = new BusRequest(BusType.START_GPS_LOG);
+                        startGPSRequest.getData().putInt(Constants.BUNDLE_TRACK_ID, track_id);
+                        bus.post(startGPSRequest);
+
                     } else {
                         new MaterialDialog.Builder(context)
                                 .title("Erreur")
